@@ -16,7 +16,7 @@ user :
 - supprimer le compte
 
 Annonce :
-- Créer une annonce (Titre, description, prix, date d'ajout, catégorie)
+- Créer une annonce (Titre, description, prix, date d'ajout, catégorie, images)
 - Consulter ses annonces
 - Modifier ses annonces
 - Supprimer ses annonces
