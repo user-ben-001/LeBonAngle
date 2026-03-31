@@ -29,3 +29,6 @@ Recherche :
 
 Message :
 - Envoyer un message à un autre membre à propos d'une annonce spécifique
+
+## modèle BDD
+<img width="1060" height="657" alt="image" src="https://github.com/user-attachments/assets/fc6b8fd3-8e94-4353-8059-8ac3b34f141b" />
