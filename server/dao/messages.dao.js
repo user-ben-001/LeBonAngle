@@ -1,8 +1,5 @@
 import mongoose from "mongoose";
-import { getDb } from "../config/db-mongo.js";
 import { ObjectId } from "mongodb";
-
-const collection = () => getDb().collection("messages");
 
 const messageSchema = new mongoose.Schema({
   from: { type: String, required: true },
@@ -11,7 +8,6 @@ const messageSchema = new mongoose.Schema({
 });
 
 const ConvSchema = new mongoose.Schema({
-  _id: { type: String, required: true },
   post_id: { type: Number, required: true },
   participants: {
     id_1: { type: String, required: true },
@@ -24,32 +20,46 @@ const Conversation = mongoose.model("Conversation", ConvSchema);
 const Message = mongoose.model("Message", messageSchema);
 
 export const findAll = () => {
-  return collection().find();
+  return Conversation.find();
 };
 
 export const findById = (id) => {
-  return collection().findOne({ _id: new ObjectId(id) });
+  return Conversation.findOne({ _id: new ObjectId(id) });
 };
 
-export const create = async (message) => {
+export const createConv = async (post_id, id_1, id_2, message) => {
   await Conversation.create({
-    _id: new ObjectId(),
-    post_id: 1,
-    participants: { id_1: 1, id_2: 2 },
-    messages:[new Message({
-      from:1,
-      to:2,
-      message:"Bonjour"
-    })]
+    post_id: post_id,
+    participants: { id_1: id_1, id_2: id_2 },
+    messages: [
+      new Message({
+        from: id_1,
+        to: id_2,
+        message: message,
+      }),
+    ],
   });
 };
 
+export const newMessage = async (id, id_1, id_2, message) => {
+  const result = await Conversation.findByIdAndUpdate(
+    id,
+    {
+      $push: {
+        messages: new Message({ from: id_1, to: id_2, message: message }),
+      },
+    },
+    { new: true },
+  );
+  return result;
+};
+
 export const update = async (id, data) => {
-  await collection().updateOne({ _id: new ObjectId(id) }, { $set: data });
+  await Conversation.updateOne({ _id: new ObjectId(id) }, { $set: data });
   return findById(id);
 };
 
 export const remove = async (id) => {
-  const result = await collection().deleteOne({ _id: new ObjectId(id) });
+  const result = await Conversation.deleteOne({ _id: new ObjectId(id) });
   return result.deletedCount > 0;
 };
