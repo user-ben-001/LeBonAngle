@@ -13,7 +13,7 @@ const db = mysql.createPool({
 
 try {
   await db.getConnection();
-  console.log("Connecté à la BDD");
+  console.log("Connecté à Sql");
 } catch (error) {
   console.log("Erreur de connexion à la BDD ", error.message);
   process.exit(1);
