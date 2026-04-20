@@ -1,13 +1,9 @@
-import { MongoClient } from "mongodb";
+import mongoose from "mongoose";
 
-const client = new MongoClient(
-  "mongodb://localhost:27017",
-);
 let db;
 
 export const connect = async () => {
-  await client.connect();
-  db = client.db("leBonAngle");
+  db = await mongoose.connect("mongodb://localhost:27017/leBonAngle");
   console.log("Connecté à MongoDB");
 };
 

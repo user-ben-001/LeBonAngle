@@ -9,15 +9,24 @@ import {
 
 const router = express.Router();
 
-router.get("/", async (req, res) => {
+router.post("/", async (req, res) => {
   try {
-    const conversations = await findAll();
-    res.json(conversations);
+    const message = req.body;
+    const result = await create(message);
+    return res.status(200).json({ result });
   } catch (e) {
-    res.status(500).json({ error: "Erreur serveur" });
+    return res.status(500).json({ e });
   }
 });
 
+router.get("/", async (req, res) => {
+  try {
+    const conversations = await findAll();
+    return res.status(200).json(conversations);
+  } catch (e) {
+    return res.status(500).json({ error: "Erreur serveur" });
+  }
+});
 router.get("/:id", async (req, res) => {
   try {
     const conversation = await findById(req.params.id);
