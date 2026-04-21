@@ -5,6 +5,7 @@ const messageSchema = new mongoose.Schema({
   from: { type: String, required: true },
   to: { type: String, required: true },
   message: { type: String, required: true },
+  reaction: [{ type: String }],
 });
 
 const ConvSchema = new mongoose.Schema({
