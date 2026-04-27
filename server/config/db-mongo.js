@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 let db;
 
 export const connect = async () => {
-  db = await mongoose.connect("mongodb://localhost:27017/leBonAngle");
+  db = await mongoose.connect(process.env.MONGO_URI);
   console.log("Connecté à MongoDB");
 };
 

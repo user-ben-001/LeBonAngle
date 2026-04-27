@@ -1,31 +1,22 @@
-import mongoose from "mongoose";
 import { ObjectId } from "mongodb";
+import { Conversation } from "../schema/conv.schema.js";
 
-const messageSchema = new mongoose.Schema({
-  from: { type: String, required: true },
-  to: { type: String, required: true },
-  message: { type: String, required: true },
-  reaction: [{ type: String }],
-});
-
-const ConvSchema = new mongoose.Schema({
-  post_id: { type: Number, required: true },
-  participants: {
-    id_1: { type: String, required: true },
-    id_2: { type: String, required: true },
-  },
-  messages: [],
-});
-
-const Conversation = mongoose.model("Conversation", ConvSchema);
-const Message = mongoose.model("Message", messageSchema);
-
-export const findAll = () => {
-  return Conversation.find();
+export const findAll = async () => {
+  return await Conversation.find();
 };
 
-export const findById = (id) => {
-  return Conversation.findOne({ _id: new ObjectId(id) });
+export const findById = async (id) => {
+  return await Conversation.findOne({ _id: id });
+};
+
+export const findMessageById = async (conv_id, message_id) => {
+  return await Conversation.findOne(
+    {
+      _id: conv_id,
+      "messages._id": message_id,
+    },
+    { "messages.$": 1 },
+  );
 };
 
 export const createConv = async (post_id, id_1, id_2, message) => {
@@ -33,11 +24,11 @@ export const createConv = async (post_id, id_1, id_2, message) => {
     post_id: post_id,
     participants: { id_1: id_1, id_2: id_2 },
     messages: [
-      new Message({
+      {
         from: id_1,
         to: id_2,
         message: message,
-      }),
+      },
     ],
   });
 };
@@ -47,11 +38,31 @@ export const newMessage = async (id, id_1, id_2, message) => {
     id,
     {
       $push: {
-        messages: new Message({ from: id_1, to: id_2, message: message }),
+        messages: { from: id_1, to: id_2, message: message },
       },
     },
-    { new: true },
+    { returnDocument: "after" },
   );
+  return result;
+};
+
+export const newReaction = async (conv_id, message_id, user_id, emoji) => {
+  const result = await Conversation.findByIdAndUpdate(
+    {
+      _id: conv_id,
+      "messages_id": message_id,
+    },
+    {
+      $push: {
+        "messages.$.reactions": {
+          user_id: user_id,
+          emoji: emoji,
+        },
+      },
+    },
+    { returnDocument: "after" },
+  );
+
   return result;
 };
 

@@ -1,67 +1,22 @@
 import express from "express";
 import {
-  findAll,
-  findById,
-  createConv,
-  newMessage,
-  update,
-  remove,
-} from "../dao/messages.dao.js";
+  CreateConv_controller,
+  findAll_controller,
+  findById_controller,
+  findMessageById_controller,
+  newMessage_controller,
+  newReaction_controller,
+} from "../controllers/conv.controller.js";
 
 const router = express.Router();
 
-router.post("/", async (req, res) => {
-  try {
-    const { post_id, id_1, id_2, message } = req.body;
-    const result = await createConv(post_id, id_1, id_2, message);
-    return res.status(200).json({ result });
-  } catch (e) {
-    return res.status(500).json({ e });
-  }
-});
+router.post("/", CreateConv_controller);
 
-router.get("/", async (req, res) => {
-  try {
-    const conversations = await findAll();
-    return res.status(200).json(conversations);
-  } catch (e) {
-    return res.status(500).json({ error: "Erreur serveur" });
-  }
-});
-router.get("/:id", async (req, res) => {
-  try {
-    const conversation = await findById(req.params.id);
-    if (!conversation) {
-      return res.status(404).json({ error: "Conversation introuvable" });
-    }
-    return res.json(conversation);
-  } catch (e) {
-    return res.status(400).json({ error: "Id invalide" });
-  }
-});
+router.get("/", findAll_controller);
+router.get("/:id", findById_controller);
+router.get("/conv/:conv_id/message/:message_id", findMessageById_controller);
 
-router.patch("/:id", async (req, res) => {
-  try {
-    const id = req.params.id;
-    const { id_1, id_2, message } = req.body;
-
-    const exist = findById(id);
-
-    if (!exist) {
-      return res.status(400).json({ message: "Conversation introuvable" });
-    }
-    if (!id_1 || !id_2) {
-      return res
-        .status(400)
-        .json({ message: "L'un des destinataire est introuvable" });
-    }
-
-    const result = await newMessage(id, id_1, id_2, message);
-
-    return res.status(200).json({ result: result, id: id });
-  } catch (e) {
-    return res.status(500).json(e);
-  }
-});
+router.patch("/:id", newMessage_controller);
+router.patch("/react/:id", newReaction_controller);
 
 export default router;
