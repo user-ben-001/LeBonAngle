@@ -8,14 +8,20 @@ import {
   remove,
   findMessageById,
 } from "../dao/messages.dao.js";
+import { AppError } from "../error/AppError.js";
+import { NotFoundError, ValidationError } from "../error/NotFoundError.js";
 
 export const CreateConv_controller = async (req, res) => {
   try {
     const { post_id, id_1, id_2, message } = req.body;
+    if (!post_id) throw new NotFoundError("Annonce");
+    if (!id_1 || !id_2 || !message)
+      throw new ValidationError("information manquante");
+
     const result = await createConv(post_id, id_1, id_2, message);
     return res.status(200).json({ result });
   } catch (error) {
-    return res.status(500).json({ error: error });
+    throw new AppError(error.message, error.status);
   }
 };
 
@@ -24,7 +30,7 @@ export const findAll_controller = async (req, res) => {
     const conversations = await findAll();
     return res.status(200).json(conversations);
   } catch (e) {
-    return res.status(500).json({ error: "Erreur serveur" });
+    throw new AppError(error.message, error.status);
   }
 };
 export const findById_controller = async (req, res) => {
@@ -35,7 +41,7 @@ export const findById_controller = async (req, res) => {
     }
     return res.json(conversation);
   } catch (e) {
-    return res.status(400).json({ error: "Id invalide" });
+    throw new AppError(error.message, error.status);
   }
 };
 export const findMessageById_controller = async (req, res) => {
@@ -45,7 +51,7 @@ export const findMessageById_controller = async (req, res) => {
     const result = await findMessageById(conv_id, message_id);
     return res.status(200).json({ result: result });
   } catch (error) {
-    return res.status(500).json({ error });
+    throw new AppError(error.message, error.status);
   }
 };
 
@@ -69,7 +75,7 @@ export const newMessage_controller = async (req, res) => {
 
     return res.status(200).json({ result: result, id: id });
   } catch (e) {
-    return res.status(500).json(e);
+    throw new AppError(error.message, error.status);
   }
 };
 export const newReaction_controller = async (req, res) => {
@@ -86,6 +92,6 @@ export const newReaction_controller = async (req, res) => {
 
     return res.status(200).json({ result });
   } catch (error) {
-    return res.status(500).json({ error });
+    throw new AppError(error.message, error.status);
   }
 };

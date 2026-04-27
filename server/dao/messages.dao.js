@@ -50,7 +50,7 @@ export const newReaction = async (conv_id, message_id, user_id, emoji) => {
   const result = await Conversation.findByIdAndUpdate(
     {
       _id: conv_id,
-      "messages_id": message_id,
+      "messages._id": message_id,
     },
     {
       $push: {
