@@ -1,3 +1,4 @@
+import { ValidationError } from "../error/NotFoundError.js";
 import {
   createPost_model,
   getAllPost_model,
@@ -10,13 +11,11 @@ import {
 export const createPost_controller = async (req, res) => {
   try {
     const { title, price, description, user_id } = req.body;
-    if (!user_id) {
-      return res.status(400).json({ message: "Utilisateur manquant" });
-    }
+    if (!user_id) throw new ValidationError("utilisateur");
     const result = await createPost_model(title, price, description, user_id);
     return res.status(200).json({ result });
   } catch (error) {
-    return res.status(500).json({ error });
+    throw new AppError(error.message, error.status);
   }
 };
 
@@ -25,7 +24,7 @@ export const getAllPost_controller = async (req, res) => {
     const result = await getAllPost_model();
     return res.status(200).json({ result });
   } catch (error) {
-    return res.status(500).json({ error });
+    throw new AppError(error.message, error.status);
   }
 };
 
@@ -35,7 +34,7 @@ export const getPostByUser_controller = async (req, res) => {
     const result = await getPostByUser_model(user_id);
     return res.status(200).json({ result });
   } catch (error) {
-    return res.status(500).json({ error });
+    throw new AppError(error.message, error.status);
   }
 };
 
@@ -45,7 +44,7 @@ export const getPostById_controller = async (req, res) => {
     const result = await getPostById_model(id);
     return res.status(200).json({ result });
   } catch (error) {
-    return res.status(500).json({ error });
+    throw new AppError(error.message, error.status);
   }
 };
 
@@ -53,25 +52,22 @@ export const updatePost_controller = async (req, res) => {
   try {
     const id = req.params.id;
     const { description, picture } = req.body;
-    if (!id) {
-      return res.status(400).json({ message: "Post introuvable" });
-    }
+    if (!id) throw new ValidationError("Id");
     const result = await updatePost_model(description, picture, id);
     return res.status(200).json({ result });
   } catch (error) {
-    return res.status(500).json({ error });
+    throw new AppError(error.message, error.status);
   }
 };
 
 export const deletePost_controller = async (req, res) => {
   try {
     const id = req.params.id;
-    if (!id) {
-      return res.status(400).json({ message: "Annonce introuvalbe" });
-    }
+    if (!id) throw new ValidationError("Id");
+
     const result = await deletePost_model(id);
     return res.status(200).json({ result });
   } catch (error) {
-    return res.status(500).json({ error });
+    throw new AppError(error.message, error.status);
   }
 };
