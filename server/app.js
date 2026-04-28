@@ -8,6 +8,7 @@ import routesTest from "./routes/test.routes.js";
 import routesMessages from "./routes/messages.routes.js";
 import routesAnnonces from "./routes/annonce.routes.js";
 import routesAuth from "./routes/auth.routes.js";
+import { errorMiddleware } from "./middlewares/error.middleware.js";
 
 const app = express();
 const port = 3000;
@@ -25,6 +26,8 @@ app.use("/api", routesTest);
 app.use("/auth", routesAuth);
 app.use("/messages", routesMessages);
 app.use("/annonces", routesAnnonces);
+
+app.use(errorMiddleware);
 
 connect().then(() => {
   app.listen(port, () => {

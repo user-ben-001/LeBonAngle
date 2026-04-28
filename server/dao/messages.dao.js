@@ -47,7 +47,7 @@ export const newMessage = async (id, id_1, id_2, message) => {
 };
 
 export const newReaction = async (conv_id, message_id, user_id, emoji) => {
-  const result = await Conversation.findByIdAndUpdate(
+  const result = await Conversation.findOneAndUpdate(
     {
       _id: conv_id,
       "messages._id": message_id,

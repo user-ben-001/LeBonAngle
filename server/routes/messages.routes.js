@@ -17,6 +17,6 @@ router.get("/:id", findById_controller);
 router.get("/conv/:conv_id/message/:message_id", findMessageById_controller);
 
 router.patch("/:id", newMessage_controller);
-router.patch("/react/:id", newReaction_controller);
+router.patch("/react/conv/:conv_id/message/:message_id", newReaction_controller);
 
 export default router;

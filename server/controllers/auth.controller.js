@@ -26,8 +26,6 @@ export const registerUser_controller = async (req, res) => {
     await createUser_model(username, email, pass_hashed);
     return res.status(201).json({ message: "Compte créer avec succès" });
   } catch (error) {
-    console.log(error);
-
     throw new AppError(error.status, error.message);
   }
 };
@@ -57,5 +55,7 @@ export const loginUser_controller = async (req, res) => {
         return res.status(200).json({ token });
       },
     );
-  } catch (error) {}
+  } catch (error) {
+    throw new AppError(error.status, error.message);
+  }
 };
