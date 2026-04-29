@@ -12,6 +12,13 @@ import { AppError } from "../error/AppError.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
+const COOKIE_OPTS = {
+  httpOnly: true,
+  sameSite: "lax",
+  secure: false,
+  maxAge: 1000 * 60 * 60 * 24,
+};
+
 export const registerUser_controller = async (req, res) => {
   try {
     const { username, email, password } = req.body;
@@ -48,11 +55,21 @@ export const loginUser_controller = async (req, res) => {
           throw new ValidationError();
         }
 
-        const key = process.env.SECRET_KEY;
-        const token = jwt.sign({ name: user.username, id: user.id }, key, {
-          expiresIn: "5min",
+        const jwtKey = process.env.SECRET_KEY;
+        const accessToken = jwt.sign(
+          { name: user.username, id: user.id },
+          jwtKey,
+          {
+            expiresIn: "5min",
+          },
+        );
+        const cookieKey = process.env.COOKIE_KEY;
+        const refreshToken = jwt.sign({ name: user.username }, cookieKey, {
+          expiresIn: "24h",
         });
-        return res.status(200).json({ token });
+
+        res.cookie("refreshToken", refreshToken, COOKIE_OPTS);
+        return res.status(200).json({ accessToken });
       },
     );
   } catch (error) {
