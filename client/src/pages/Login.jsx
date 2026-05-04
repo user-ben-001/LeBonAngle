@@ -99,7 +99,7 @@ const Login = () => {
               onChange={(e) => setPassword(e.target.value)}
               value={password}
             />
-            <button>Valider</button>
+            <button type="submit">Valider</button>
           </form>
           <button
             onClick={() => {
@@ -142,7 +142,7 @@ const Login = () => {
               }}
               value={password}
             />
-            <button>Valider</button>
+            <button type="submit">Valider</button>
           </form>
           <button
             onClick={() => {

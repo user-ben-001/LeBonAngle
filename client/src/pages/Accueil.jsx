@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
- import Header from "../components/Header.jsx";
+import Header from "../components/Header.jsx";
 import PostCard from "../components/PostCard.jsx";
 
 const Accueil = () => {
@@ -11,7 +11,7 @@ const Accueil = () => {
         credentials: "include",
       });
       const result = await response.json();
-      setData(result.result);
+      setData(result.result[0]);
     };
     fetchData();
   }, []);

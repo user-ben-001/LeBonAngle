@@ -8,7 +8,8 @@ const Header = () => {
   return (
     <>
       <div>
-        <img src="" alt="" />
+        <img src="#" alt="" />
+        <button onClick={navigate("/")}>Accueil</button>
       </div>
       <div>
         <input name="searchBar" id="searchBar" placeholder="Recherche" />

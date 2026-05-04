@@ -1,5 +1,5 @@
 const PostCard = (props) => {
-  const data = props.data[0];
+  const data = props.data;
 
   const pic = data.pictures;
   const title = data.title;
