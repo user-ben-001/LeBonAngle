@@ -1,4 +1,8 @@
+import { useNavigate } from "react-router-dom";
+
 const PostCard = (props) => {
+  const navigate = useNavigate();
+
   const data = props.data;
 
   const pic = data.pictures;
@@ -14,6 +18,13 @@ const PostCard = (props) => {
         <p>{description}</p>
         <p> {price}€ </p>
       </div>
+      <button
+        onClick={() => {
+          navigate("#" + data.id);
+        }}
+      >
+        Voir l'annonce
+      </button>
     </div>
   );
 };

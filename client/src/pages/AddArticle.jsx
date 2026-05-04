@@ -8,7 +8,7 @@ const AddArticle = () => {
   const [description, setDescription] = useState();
   const [picture, setPicture] = useState();
 
-  const { userId } = useContext(UserContext);
+  const { userId, accessToken } = useContext(UserContext);
 
   const newAnnonce = {
     price: price,
@@ -21,16 +21,19 @@ const AddArticle = () => {
   const HandleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log(newAnnonce);
-
     try {
       if (!price || !title) {
         alert("Titre et prix obligatoires");
       }
+      console.log(newAnnonce);
+
       await fetch("http://localhost:3000/annonces/", {
         method: "POST",
         credentials: "include",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
         body: JSON.stringify(newAnnonce),
       });
       alert("Annonce créée");
@@ -52,6 +55,7 @@ const AddArticle = () => {
           type="text"
           placeholder="Titre"
           required
+          autoFocus
           onChange={(e) => {
             setTitle(e.target.value);
           }}

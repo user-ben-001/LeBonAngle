@@ -6,7 +6,6 @@ import cookieParser from "cookie-parser";
 
 import { connect } from "./config/db-mongo.js";
 
-import routesTest from "./routes/test.routes.js";
 import routesMessages from "./routes/messages.routes.js";
 import routesAnnonces from "./routes/annonce.routes.js";
 import routesAuth from "./routes/auth.routes.js";
@@ -26,7 +25,6 @@ app.use(
 app.use(helmet());
 app.use(cookieParser())
 
-app.use("/api", routesTest);
 app.use("/auth", routesAuth);
 app.use("/messages", routesMessages);
 app.use("/annonces", routesAnnonces);
