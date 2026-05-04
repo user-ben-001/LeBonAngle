@@ -5,11 +5,12 @@ const Header = () => {
   const navigate = useNavigate();
 
   const [profilMenu, setProfilMenu] = useState(false);
+
   return (
     <>
       <div>
         <img src="#" alt="" />
-        <button onClick={navigate("/")}>Accueil</button>
+        <button onClick={() => navigate("/")}>Accueil</button>
       </div>
       <div>
         <input name="searchBar" id="searchBar" placeholder="Recherche" />

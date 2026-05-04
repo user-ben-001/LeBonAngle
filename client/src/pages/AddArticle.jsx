@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Header from "../components/Header.jsx";
+import { UserContext } from "../contexts/UserContext.jsx";
 
 const AddArticle = () => {
   const [title, setTitle] = useState();
@@ -7,16 +8,20 @@ const AddArticle = () => {
   const [description, setDescription] = useState();
   const [picture, setPicture] = useState();
 
+  const { userId } = useContext(UserContext);
+
   const newAnnonce = {
     price: price,
     title: title,
     description: description,
     pictures: picture,
-    user_id: 1,
+    user_id: userId,
   };
 
   const HandleSubmit = async (e) => {
     e.preventDefault();
+
+    console.log(newAnnonce);
 
     try {
       if (!price || !title) {

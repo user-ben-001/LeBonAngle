@@ -9,7 +9,7 @@ const Login = () => {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
 
-  const { setRefreshToken } = useContext(UserContext);
+  const { setRefreshToken, setUserId } = useContext(UserContext);
 
   const navigate = useNavigate();
 
@@ -41,9 +41,11 @@ const Login = () => {
         }
 
         const data = await response.json();
-        console.log(data);
 
-        setRefreshToken(data);
+        const { accessToken, user_id } = data;
+
+        setUserId(user_id);
+        setRefreshToken(accessToken);
 
         navigate(`/`);
       }
