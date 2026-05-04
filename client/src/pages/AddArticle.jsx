@@ -3,9 +3,9 @@ import Header from "../components/Header.jsx";
 
 const AddArticle = () => {
   const [title, setTitle] = useState();
-  const [price, setPrice] = usestate();
-  const [description, setDescription] = usestate();
-  const [image, setImage] = usestate();
+  const [price, setPrice] = useState();
+  const [description, setDescription] = useState();
+  const [image, setImage] = useState();
 
   const newAnnonce = {};
   return (
