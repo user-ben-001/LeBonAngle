@@ -2,6 +2,7 @@ import "dotenv/config";
 import {
   createUser_model,
   findUserByEmail_model,
+  findUserById_model,
 } from "../models/user.model.js";
 import {
   NotFoundError,
@@ -64,9 +65,13 @@ export const loginUser_controller = async (req, res) => {
           },
         );
         const cookieKey = process.env.COOKIE_KEY;
-        const refreshToken = jwt.sign({ name: user.username }, cookieKey, {
-          expiresIn: "24h",
-        });
+        const refreshToken = jwt.sign(
+          { name: user.username, id: user.id },
+          cookieKey,
+          {
+            expiresIn: "24h",
+          },
+        );
 
         res.cookie("refreshToken", refreshToken, COOKIE_OPTS);
         return res.status(200).json({ accessToken });
@@ -74,5 +79,38 @@ export const loginUser_controller = async (req, res) => {
     );
   } catch (error) {
     throw new AppError(error.status, error.message);
+  }
+};
+
+export const refresh = async (req, res, next) => {
+  try {
+    const refreshTokenOld = req.cookie.refreshToken;
+    if (!refreshTokenOld) {
+      throw new UnauthorizedError("refresh token manquant");
+    }
+    try {
+      let payload = jwt.verify(refreshTokenOld, process.env.COOKIE_KEY);
+    } catch {
+      throw new UnauthorizedError("Refresh token invalide ou expiré");
+    }
+    const user = await findUserById_model(payload.id);
+
+    const jwtKey = process.env.SECRET_KEY;
+    const accessToken = jwt.sign({ name: user.username, id: user.id }, jwtKey, {
+      expiresIn: "5min",
+    });
+    const cookieKey = process.env.COOKIE_KEY;
+    const refreshToken = jwt.sign(
+      { name: user.username, id: user.id },
+      cookieKey,
+      {
+        expiresIn: "24h",
+      },
+    );
+
+    res.cookie("refreshToken", refreshToken, COOKIE_OPTS);
+    return res.status(200).json({ accessToken });
+  } catch (error) {
+    next(error);
   }
 };

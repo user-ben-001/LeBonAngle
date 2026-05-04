@@ -14,3 +14,8 @@ export const findUserByEmail_model = async (email) => {
   ]);
   return result[0];
 };
+
+export const findUserById_model = async (id) => {
+  const [result] = await db.query("SELECT * FROM users WHERE id =?", [id]);
+  return result[0];
+};
