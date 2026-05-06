@@ -10,6 +10,7 @@ import routesMessages from "./routes/messages.routes.js";
 import routesAnnonces from "./routes/annonce.routes.js";
 import routesAuth from "./routes/auth.routes.js";
 import { errorMiddleware } from "./middlewares/error.middleware.js";
+import { authMiddleware } from "./middlewares/auth.middleware.js";
 
 const app = express();
 const port = 3000;
@@ -26,7 +27,7 @@ app.use(helmet());
 app.use(cookieParser())
 
 app.use("/auth", routesAuth);
-app.use("/messages", routesMessages);
+app.use("/messages", authMiddleware, routesMessages);
 app.use("/annonces", routesAnnonces);
 
 app.use(errorMiddleware);

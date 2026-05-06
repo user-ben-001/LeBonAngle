@@ -9,10 +9,7 @@ const Accueil = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch("http://localhost:3000/annonces/", {
-        credentials: "include",
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
+      const response = await fetch("http://localhost:3000/annonces/");
       const result = await response.json();
       setData(result.result[0]);
     };
