@@ -16,3 +16,12 @@ export const setAccessToken = (token) => {
     return response;
   };
 };
+
+window.fetch = async (...args) => {
+  let [ressource, config] = args;
+  let response = await originalFetch(ressource, config)
+
+  const json = ()=>{
+    response.clone().json().then((data)=>({...data, }))
+  }
+};

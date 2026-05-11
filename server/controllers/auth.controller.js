@@ -116,3 +116,8 @@ export const refresh = async (req, res, next) => {
     next(error);
   }
 };
+
+export const logout_controller = async (req, res) => {
+  res.clearCookie("refreshToken", COOKIE_OPTS);
+  res.json({ message: "Déconnecté" });
+};

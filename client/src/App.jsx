@@ -7,21 +7,54 @@ import AllArticles from "./pages/AllArticles.jsx";
 import Categories from "./pages/Categories.jsx";
 import Article from "./pages/Article.jsx";
 import AddArticle from "./pages/AddArticle.jsx";
-import { UserProvider } from "./contexts/UserContext.jsx";
+import { PrivateRoute } from "./components/PrivateRoutes.jsx";
 
 function App() {
   return (
     <>
-      <UserProvider>
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/" element={<Accueil />} />
-          <Route path="/all-articles" element={<AllArticles />} />
-          <Route path="/categories" element={<Categories />} />
-          <Route path="/article" element={<Article />} />
-          <Route path="/add-article" element={<AddArticle />} />
-        </Routes>
-      </UserProvider>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route
+          path="/"
+          element={
+            <PrivateRoute>
+              <Accueil />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/all-articles"
+          element={
+            <PrivateRoute>
+              <AllArticles />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/categories"
+          element={
+            <PrivateRoute>
+              <Categories />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/article"
+          element={
+            <PrivateRoute>
+              <Article />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/add-article"
+          element={
+            <PrivateRoute>
+              <AddArticle />
+            </PrivateRoute>
+          }
+        />
+      </Routes>
     </>
   );
 }

@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { UnauthorizedError } from "../error/NotFoundError.jsx";
+import { UnauthorizedError } from "../error/NotFoundError.js";
 
 export const authMiddleware = (req, res, next) => {
   const authHeader = req.header.authorization;

@@ -1,15 +1,72 @@
-import { createContext, useState } from "react";
+import { createContext, useContext, useState } from "react";
+import { setAccessToken } from "../interceptors/Auth.interceptor";
+import { jwtDecode } from "jwt-decode";
 
 export const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
-  const [refreshToken, setRefreshToken] = useState();
-  const [userId, setUserId] = useState();
+  const [userInfo, setUserInfo] = useState();
+
+  const login = async (email, password) => {
+    if (email && password != "") {
+      const user = {
+        email: email,
+        password: password,
+      };
+      const response = await fetch("http://localhost:3000/auth/login", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(user),
+      });
+
+      if (!response.ok) {
+        alert(response.status);
+      }
+
+      const data = await response.json();
+
+      setAccessToken(data.accessToken);
+
+      const decoded = jwtDecode(data.accessToken);
+      const addUser = {
+        id: decoded.id,
+        email: decoded.username,
+      };
+      setUserInfo(addUser);
+    }
+  };
+
+  const register = async (name, email, password) => {
+    if (name && email && password != "") {
+      const newUser = {
+        username: name,
+        email: email,
+        password: password,
+      };
+      const response = await fetch("http://localhost:3000/auth/register", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newUser),
+      });
+    }
+  };
+
+  const logout = async () => {
+    const response = await fetch("http://localhost:3000/auth/logout", {
+      method: "POST",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+    });
+  };
   return (
-    <UserContext.Provider
-      value={{ refreshToken, userId, setRefreshToken, setUserId }}
-    >
+    <UserContext.Provider value={{ userInfo, login, register, logout }}>
       {children}
     </UserContext.Provider>
   );
+};
+
+export const useAuth = () => {
+  return useContext(UserContext);
 };

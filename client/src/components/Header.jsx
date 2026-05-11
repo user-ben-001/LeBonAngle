@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { UserContext } from "../contexts/UserContext";
 
 const Header = () => {
   const navigate = useNavigate();
 
   const [profilMenu, setProfilMenu] = useState(false);
+  const { logout } = useContext(UserContext);
 
   return (
     <>
@@ -29,7 +31,7 @@ const Header = () => {
           <button onClick={() => navigate("/add-article")}>
             Ajouter une annonce
           </button>
-          <button>Déconnexion</button>
+          <button onClick={() => logout()}>Déconnexion</button>
         </div>
       )}
     </>

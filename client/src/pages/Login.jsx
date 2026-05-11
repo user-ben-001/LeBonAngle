@@ -3,52 +3,22 @@ import { UserContext } from "../contexts/UserContext";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-  const [login, setLogin] = useState(true);
+  const [loginForm, setLoginForm] = useState(true);
 
   const [username, setUsername] = useState();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
 
-  const { setRefreshToken, setUserId } = useContext(UserContext);
+  const { login, register } = useContext(UserContext);
 
   const navigate = useNavigate();
-
-  const user = {
-    email: email,
-    password: password,
-  };
-
-  const newUser = {
-    username: username,
-    email: email,
-    password: password,
-  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
 
     try {
-      if (email && password != "") {
-        const response = await fetch("http://localhost:3000/auth/login", {
-          method: "POST",
-          credentials: "include",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(user),
-        });
-
-        if (!response.ok) {
-          alert(response.status);
-        }
-
-        const data = await response.json();
-
-        const { accessToken, user_id } = data;
-
-        setUserId(user_id);
-        setRefreshToken(accessToken);
-
-        navigate(`/`);
-      }
+      await login(email, password);
+      navigate(`/`);
     } catch (error) {
       alert("Erreur de connexion au serveur" + error.message);
     }
@@ -58,20 +28,13 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      if (username && email && password != "") {
-        const response = await fetch("http://localhost:3000/auth/register", {
-          method: "POST",
-          credentials: "include",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(newUser),
-        });
+      const response = await register(username, email, password);
 
-        if (!response.ok) {
-          alert(response.status);
-        }
-        alert("Compte créer");
-        window.location.reload();
+      if (!response.ok) {
+        alert(response.status);
       }
+      alert("Compte créer");
+      window.location.reload();
     } catch (error) {
       alert("Erreur de connexion au serveur" + error.message);
     }
@@ -79,7 +42,7 @@ const Login = () => {
 
   return (
     <div>
-      {login ? (
+      {loginForm ? (
         <div>
           <form onSubmit={handleLogin}>
             <input
@@ -105,7 +68,7 @@ const Login = () => {
           </form>
           <button
             onClick={() => {
-              setLogin(false);
+              setLoginForm(false);
             }}
           >
             Register
@@ -148,7 +111,7 @@ const Login = () => {
           </form>
           <button
             onClick={() => {
-              setLogin(true);
+              setLoginForm(true);
             }}
           >
             Login
