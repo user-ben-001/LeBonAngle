@@ -19,8 +19,10 @@ export const UserProvider = ({ children }) => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(user),
       });
+      console.log(response);
 
       if (!response.ok) {
+
         alert(response.status);
       }
 

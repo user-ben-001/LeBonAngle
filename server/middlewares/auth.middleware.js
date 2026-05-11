@@ -2,9 +2,10 @@ import jwt from "jsonwebtoken";
 import { UnauthorizedError } from "../error/NotFoundError.js";
 
 export const authMiddleware = (req, res, next) => {
-  const authHeader = req.header.authorization;
+  const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith("Bearer")) {
+    console.log("click");
     throw new UnauthorizedError("Token manquant");
   }
 

@@ -8,14 +8,14 @@ const AddArticle = () => {
   const [description, setDescription] = useState();
   const [picture, setPicture] = useState();
 
-  const { userId, accessToken } = useContext(UserContext);
+  const { userInfo } = useContext(UserContext);
 
   const newAnnonce = {
     price: price,
     title: title,
     description: description,
     pictures: picture,
-    user_id: userId,
+    user_id: userInfo.id,
   };
 
   const HandleSubmit = async (e) => {
@@ -25,16 +25,14 @@ const AddArticle = () => {
       if (!price || !title) {
         alert("Titre et prix obligatoires");
       }
+
       console.log(newAnnonce);
 
       await fetch("http://localhost:3000/annonces/", {
         method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
         body: JSON.stringify(newAnnonce),
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
       });
       alert("Annonce créée");
       setTitle("");
