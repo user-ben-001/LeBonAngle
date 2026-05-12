@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import Header from "../components/Header.jsx";
-import { UserContext } from "../contexts/UserContext.jsx";
+import { useAuth, UserContext } from "../contexts/UserContext.jsx";
 
 const AddArticle = () => {
   const [title, setTitle] = useState();
@@ -8,7 +8,7 @@ const AddArticle = () => {
   const [description, setDescription] = useState();
   const [picture, setPicture] = useState();
 
-  const { userInfo } = useContext(UserContext);
+  const { userInfo } = useAuth();
 
   const newAnnonce = {
     price: price,
@@ -26,7 +26,7 @@ const AddArticle = () => {
         alert("Titre et prix obligatoires");
       }
 
-      console.log(newAnnonce);
+      //   console.log(newAnnonce);
 
       await fetch("http://localhost:3000/annonces/", {
         method: "POST",

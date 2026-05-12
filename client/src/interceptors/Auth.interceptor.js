@@ -6,24 +6,23 @@ export const setAccessToken = (token) => {
   accessToken = token;
 };
 
+// window.fetch = async (...args) => {
+//   let [ressource, config] = args;
+
+//   let response = await originalFetch(ressource, config);
+
+//   return response;
+// };
+
 window.fetch = async (...args) => {
   let [ressource, config] = args;
 
-  config = {
-    headers: { Authorization: `Bearer ${accessToken}` },
-  };
-  console.log(config);
+  config.headers.authorization = `Bearer ${accessToken}`;
 
   let response = await originalFetch(ressource, config);
 
-  return response;
-};
-
-window.fetch = async (...args) => {
-  let [ressource, config] = args;
-  let response = await originalFetch(...args);
-
-  if (!response.ok && response.status === 401) {
+  if (!response.ok && response.status === 401 && !originalFetch.once) {
+    originalFetch.once = true;
     try {
       const refresh = await fetch("http://localhost:3000/auth/refresh", {
         credentials: "include",

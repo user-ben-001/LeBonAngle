@@ -5,7 +5,7 @@ export const authMiddleware = (req, res, next) => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith("Bearer")) {
-    console.log("click");
+    // console.log(authHeader);
     throw new UnauthorizedError("Token manquant");
   }
 

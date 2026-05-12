@@ -74,9 +74,7 @@ export const loginUser_controller = async (req, res) => {
         );
 
         res.cookie("refreshToken", refreshToken, COOKIE_OPTS);
-        return res
-          .status(200)
-          .json({ accessToken: accessToken, user_id: user.id });
+        return res.status(200).json({ accessToken: accessToken });
       },
     );
   } catch (error) {

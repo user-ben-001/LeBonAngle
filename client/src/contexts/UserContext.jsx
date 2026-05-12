@@ -1,6 +1,7 @@
 import { createContext, useContext, useState } from "react";
-import { setAccessToken } from "../interceptors/Auth.interceptor";
 import { jwtDecode } from "jwt-decode";
+
+import { setAccessToken } from "../interceptors/Auth.interceptor.js";
 
 export const UserContext = createContext();
 
@@ -19,18 +20,18 @@ export const UserProvider = ({ children }) => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(user),
       });
-      console.log(response);
+      //   console.log(response);
 
       if (!response.ok) {
-
         alert(response.status);
       }
 
       const data = await response.json();
 
-      setAccessToken(data.accessToken);
+      await setAccessToken(data.accessToken);
 
       const decoded = jwtDecode(data.accessToken);
+
       const addUser = {
         id: decoded.id,
         email: decoded.username,
@@ -61,6 +62,8 @@ export const UserProvider = ({ children }) => {
       credentials: "include",
       headers: { "Content-Type": "application/json" },
     });
+    setAccessToken(null);
+    setUserInfo(null);
   };
   return (
     <UserContext.Provider value={{ userInfo, login, register, logout }}>
