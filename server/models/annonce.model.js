@@ -35,7 +35,7 @@ export const getPostById_model = async (id) => {
   return [result];
 };
 export const getPostBySearch_model = async ({
-  p,
+  q,
   categoryId,
   minPrice,
   maxPrice,
@@ -43,23 +43,27 @@ export const getPostBySearch_model = async ({
   let sql = "SELECT * FROM posts WHERE 1=1 ";
   const params = [];
 
-  if (q) {
+  if (q != undefined) {
     sql += "AND (title LIKE ? OR description LIKE ?) ";
     params.push(`%${q}%`, `%${q}%`);
   }
+
   if (categoryId) {
-    sql += "AND category_id=?";
+    sql += "AND category_id=? ";
     params.push(Number(categoryId));
   }
+
   if (minPrice) {
-    sql += "AND price >=?";
+    sql += "AND price >=? ";
     params.push(Number(minPrice));
   }
+
   if (maxPrice) {
-    sql += "AND price <=?";
+    sql += "AND price <=? ";
     params.push(Number(maxPrice));
   }
-  const [rows] = await db.execute(sql, params);
+
+  const [rows] = await db.query(sql, params);
   return rows;
 };
 

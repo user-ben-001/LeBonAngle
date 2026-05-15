@@ -12,9 +12,12 @@ export const useAnnonces = () => {
 
   useEffect(() => {
     const getCategories = async () => {
-      const response = await fetch(import.meta.env.VITE_API_URL+"/categories/", {
-        headers: { "Content-Type": "application/json" },
-      });
+      const response = await fetch(
+        import.meta.env.VITE_API_URL + "/categories/",
+        {
+          headers: { "Content-Type": "application/json" },
+        },
+      );
       const result = await response.json();
       setCategories(result.result);
     };
@@ -24,28 +27,33 @@ export const useAnnonces = () => {
   useEffect(() => {
     setIsLoading(true);
 
-    const params = {};
+    const body = {};
     if (search) {
-      params.q = search;
+      body.q = search;
     }
     if (categoryId) {
-      params.category_id = categoryId;
+      body.category_id = categoryId;
     }
     if (minPrice) {
-      params.min_price = minPrice;
+      body.min_price = minPrice;
     }
     if (maxPrice) {
-      params.max_price = maxPrice;
+      body.max_price = maxPrice;
     }
 
-    fetch("/annonces/search", {
-      params,
+    fetch(import.meta.env.VITE_API_URL + "/annonces/search", {
+      method: "POST",
+      credentials: "include",
       headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
     })
-      .then((res) => setAnnonces(res.data))
+      .then((res) => {
+        res.json().then((data) => setAnnonces(data.result));
+      })
       .catch((err) => setError(err.message))
       .finally(() => setIsLoading(false));
   }, [search, categoryId, minPrice, maxPrice]);
+  
   return {
     annonces,
     categories,

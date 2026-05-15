@@ -10,6 +10,7 @@ export const SearchBar = (props) => {
     categoryId,
     setCategoryId,
   } = props;
+
   return (
     <div>
       <input

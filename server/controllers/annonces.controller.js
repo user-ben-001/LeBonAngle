@@ -68,13 +68,15 @@ export const getPostByCategory_controller = async (req, res, next) => {
 
 export const getPostBySearch_controller = async (req, res, next) => {
   try {
-    const { q, category_id, min_price, max_price } = req.query;
-    const result = await getPostBySearch_model(
-      q,
-      category_id,
-      min_price,
-      max_price,
-    );
+    const { q, category_id, min_price, max_price } = req.body;
+
+    const result = await getPostBySearch_model({
+      q:q,
+      categoryId:category_id,
+      minPrice:min_price,
+      maxPrice:max_price,
+    });
+
     return res.status(200).json({ result });
   } catch (error) {
     next(error);

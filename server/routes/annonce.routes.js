@@ -18,7 +18,7 @@ router.post("/", authMiddleware, createPost_controller);
 router.get("/", getAllPost_controller);
 router.get("/user/:user_id", getPostByUser_controller);
 router.get("/:id", getPostById_controller);
-router.get("/search", getPostBySearch_controller);
+router.post("/search", getPostBySearch_controller);
 router.get("/category/:categoryId", getPostByCategory_controller);
 
 router.patch("/:id", authMiddleware, updatePost_controller);
