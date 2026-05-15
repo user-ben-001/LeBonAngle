@@ -1,12 +1,16 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import Header from "../components/Header.jsx";
 import { useAuth, UserContext } from "../contexts/UserContext.jsx";
+import { useAnnonces } from "../hooks/useAnnonces.js";
 
 const AddArticle = () => {
   const [title, setTitle] = useState();
   const [price, setPrice] = useState();
   const [description, setDescription] = useState();
   const [picture, setPicture] = useState();
+  const [categoryId, setCategoryId] = useState();
+
+  const { categories } = useAnnonces();
 
   const { userInfo } = useAuth();
 
@@ -16,6 +20,7 @@ const AddArticle = () => {
     description: description,
     pictures: picture,
     user_id: userInfo.id,
+    category_id: categoryId,
   };
 
   const HandleSubmit = async (e) => {
@@ -28,12 +33,14 @@ const AddArticle = () => {
 
       //   console.log(newAnnonce);
 
-      await fetch("http://localhost:3000/annonces/", {
+      await fetch(import.meta.env.VITE_API_URL + "/annonces/", {
         method: "POST",
-        body: JSON.stringify(newAnnonce),
         credentials: "include",
         headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newAnnonce),
       });
+      console.log(newAnnonce);
+      
       alert("Annonce créée");
       setTitle("");
       setPrice("");
@@ -61,7 +68,7 @@ const AddArticle = () => {
         />
         <br />
         <input
-          type="text"
+          type="number"
           placeholder="Prix"
           required
           onChange={(e) => setPrice(e.target.value)}
@@ -74,6 +81,20 @@ const AddArticle = () => {
           onChange={(e) => setDescription(e.target.value)}
           value={description}
         />
+        <br />
+        <select
+          value={categoryId}
+          onChange={(e) => setCategoryId(e.target.value)}
+        >
+          <option>Toutes les Catégories</option>
+          {categories.map((cat) => {
+            return (
+              <option value={cat.id} key={cat.id}>
+                {cat.title}
+              </option>
+            );
+          })}
+        </select>
         <p>Ajoutez un image (opt)</p>
         <input type="file" onChange={(e) => setPicture(e.target.value)} />
         <button type="submit">Poster</button>

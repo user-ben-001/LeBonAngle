@@ -6,14 +6,6 @@ export const setAccessToken = (token) => {
   accessToken = token;
 };
 
-// window.fetch = async (...args) => {
-//   let [ressource, config] = args;
-
-//   let response = await originalFetch(ressource, config);
-
-//   return response;
-// };
-
 window.fetch = async (...args) => {
   let [ressource, config] = args;
 
@@ -23,11 +15,16 @@ window.fetch = async (...args) => {
 
   if (!response.ok && response.status === 401 && !originalFetch.once) {
     originalFetch.once = true;
+
     try {
-      const refresh = await fetch("http://localhost:3000/auth/refresh", {
-        credentials: "include",
-      });
-      accessToken = refresh.accessToken;
+      const refresh = await fetch(
+        import.meta.env.VITE_API_URL + "/auth/refresh",
+        {
+          credentials: "include",
+        },
+      );
+
+      setAccessToken(refresh.accessToken);
     } catch (error) {
       accessToken = null;
       window.location.href = "/login";

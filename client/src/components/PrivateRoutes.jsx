@@ -2,10 +2,14 @@ import { useAuth } from "../contexts/UserContext.jsx";
 import { Navigate } from "react-router-dom";
 
 export const PrivateRoute = ({ children }) => {
-  const { userInfo } = useAuth();
+  const { userInfo, refreshToken } = useAuth();
 
   if (!userInfo) {
-    return <Navigate to="/login" replace />;
+    refreshToken();
+
+    if (!refreshToken) {
+      return <Navigate to="/login" replace />;
+    }
   }
   return children;
 };

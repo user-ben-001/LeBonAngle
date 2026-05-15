@@ -2,6 +2,7 @@ import { createContext, useContext, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 
 import { setAccessToken } from "../interceptors/Auth.interceptor.js";
+import { Navigate } from "react-router-dom";
 
 export const UserContext = createContext();
 
@@ -14,13 +15,15 @@ export const UserProvider = ({ children }) => {
         email: email,
         password: password,
       };
-      const response = await fetch("http://localhost:3000/auth/login", {
-        method: "POST",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(user),
-      });
-      //   console.log(response);
+      const response = await fetch(
+        import.meta.env.VITE_API_URL + "/auth/login",
+        {
+          method: "POST",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(user),
+        },
+      );
 
       if (!response.ok) {
         alert(response.status);
@@ -36,6 +39,7 @@ export const UserProvider = ({ children }) => {
         id: decoded.id,
         email: decoded.username,
       };
+
       setUserInfo(addUser);
     }
   };
@@ -47,7 +51,7 @@ export const UserProvider = ({ children }) => {
         email: email,
         password: password,
       };
-      const response = await fetch("http://localhost:3000/auth/register", {
+      await fetch(import.meta.env.VITE_API_URL + "/auth/register", {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
@@ -56,17 +60,48 @@ export const UserProvider = ({ children }) => {
     }
   };
 
+  const refreshToken = async () => {
+    const refresh = await fetch(
+      import.meta.env.VITE_API_URL + "/auth/refresh",
+      {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+      },
+    );
+    if (!refresh.ok) {
+      return false;
+    }
+
+    const data = await refresh.json();
+
+    await setAccessToken(data.accessToken);
+
+    const decoded = jwtDecode(data.accessToken);
+
+    const addUser = {
+      id: decoded.id,
+      email: decoded.username,
+    };
+
+    setUserInfo(addUser);
+    return true;
+  };
+
   const logout = async () => {
-    const response = await fetch("http://localhost:3000/auth/logout", {
+    await fetch(import.meta.env.VITE_API_URL + "/auth/logout", {
       method: "POST",
       credentials: "include",
       headers: { "Content-Type": "application/json" },
     });
     setAccessToken(null);
     setUserInfo(null);
+    <Navigate to="/login" replace />;
   };
   return (
-    <UserContext.Provider value={{ userInfo, login, register, logout }}>
+    <UserContext.Provider
+      value={{ userInfo, login, register, logout, refreshToken }}
+    >
       {children}
     </UserContext.Provider>
   );

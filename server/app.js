@@ -9,6 +9,7 @@ import { connect } from "./config/db-mongo.js";
 import routesMessages from "./routes/messages.routes.js";
 import routesAnnonces from "./routes/annonce.routes.js";
 import routesAuth from "./routes/auth.routes.js";
+import routesCategories from "./routes/category.routes.js";
 import { errorMiddleware } from "./middlewares/error.middleware.js";
 import { authMiddleware } from "./middlewares/auth.middleware.js";
 
@@ -24,11 +25,12 @@ app.use(
   }),
 );
 app.use(helmet());
-app.use(cookieParser())
+app.use(cookieParser());
 
 app.use("/auth", routesAuth);
 app.use("/messages", authMiddleware, routesMessages);
 app.use("/annonces", routesAnnonces);
+app.use("/categories", routesCategories);
 
 app.use(errorMiddleware);
 

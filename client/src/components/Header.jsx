@@ -1,12 +1,25 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { UserContext } from "../contexts/UserContext";
+import { useAuth, UserContext } from "../contexts/UserContext";
+import { SearchBar } from "../components/SearchBar.jsx";
+import { useAnnonces } from "../hooks/useAnnonces.js";
 
 const Header = () => {
   const navigate = useNavigate();
 
   const [profilMenu, setProfilMenu] = useState(false);
-  const { logout } = useContext(UserContext);
+  const { logout } = useAuth();
+  const {
+    categories,
+    search,
+    setSearch,
+    minPrice,
+    setMinPrice,
+    maxPrice,
+    setMaxPrice,
+    categoryId,
+    setCategoryId,
+  } = useAnnonces();
 
   return (
     <>
@@ -14,10 +27,17 @@ const Header = () => {
         <img src="#" alt="" />
         <button onClick={() => navigate("/")}>Accueil</button>
       </div>
-      <div>
-        <input name="searchBar" id="searchBar" placeholder="Recherche" />
-        <button id="searchButton">rechercher</button>
-      </div>
+      <SearchBar
+        categories={categories}
+        search={search}
+        setSearch={setSearch}
+        minPrice={minPrice}
+        setMinPrice={setMinPrice}
+        maxPrice={maxPrice}
+        setMaxPrice={setMaxPrice}
+        categoryId={categoryId}
+        setCategoryId={setCategoryId}
+      />
       <div>
         <button onClick={() => navigate("/all-articles")}>
           Toutes les offres
