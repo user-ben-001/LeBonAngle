@@ -10,10 +10,17 @@ import {
 } from "../controllers/annonces.controller.js";
 import express from "express";
 import { authMiddleware } from "../middlewares/auth.middleware.js";
+import { newArticleSchema } from "../schema/validation.schema.js";
+import { validate } from "../middlewares/validate.middlware.js";
 
 const router = express.Router();
 
-router.post("/", authMiddleware, createPost_controller);
+router.post(
+  "/",
+  authMiddleware,
+  validate(newArticleSchema),
+  createPost_controller,
+);
 
 router.get("/", getAllPost_controller);
 router.get("/user/:user_id", getPostByUser_controller);
